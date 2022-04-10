@@ -24,7 +24,7 @@ public class ExpensesController {
     }
     
     @GetMapping("/index")
-    public String showUserList(Model model) {
+    public String showExpenseList(Model model) {
         model.addAttribute("expenses", expenseRepository.findAll());
         return "index";
     }
@@ -81,4 +81,12 @@ public class ExpensesController {
         return "redirect:/index";
     }
     // additional CRUD methods
+
+    @GetMapping("/delete/{id}")
+    public String deleteExpense(@PathVariable("id") long id, Model model) {
+        Expenses expense = expenseRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        expenseRepository.delete(expense);
+        
+        return "redirect:/index";
+    }
 }
