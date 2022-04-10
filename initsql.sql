@@ -1,8 +1,10 @@
-create USER 'debezium'@'%' IDENTIFIED WITH mysql_native_password BY 'dbz'; 
+create database inventory;
+
+create USER 'debezium'@'%' IDENTIFIED WITH mysql_native_password BY 'debezium'; 
 
 GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT  ON *.* TO 'debezium';
 
-create database inventory;
+GRANT ALL PRIVILEGES ON inventory.* TO 'debezium'@'%'
 
 use inventory;
 
