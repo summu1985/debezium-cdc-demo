@@ -1,0 +1,8 @@
+# List kafka topics
+oc exec my-cluster-kafka-0 -c kafka -i -t -- bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+
+# Follow kafka topics
+oc exec my-cluster-kafka-0 -c kafka -i -t -- \
+ bin/kafka-console-consumer.sh \
+    --bootstrap-server localhost:9092 \
+    --topic inventory.inventory.expenses --from-beginning

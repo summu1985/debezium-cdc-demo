@@ -1,0 +1,2 @@
+docker run --name mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -p 3306:3306 -d mysql
+docker run -d --name expenses_app -p 8080:8080 -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/inventory -e SPRING_DATASOURCE_USERNAME=debezium -e SPRING_DATASOURCE_PASSWORD=debezium --link mysql summu85/cdc-demo
