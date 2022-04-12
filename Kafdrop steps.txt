@@ -1,0 +1,21 @@
+Go to add
+select container image
+configure the following
+ - image : docker.io/obsidiandynamics/kafdrop:latest
+ - application-name : cdc-demo
+ - name : kafdrop
+ - select DeploymentConfig
+ - create a route - unchecked
+ - Go to deployment options
+   - Auto deploy when new Image is available - checked
+   - Auto deploy when deployment configuration changes - checked
+   - add an env variable : KAFKA_BROKERCONNECT = my-cluster-kafka-bootstrap:9092
+
+Click create
+Once pods are up, go to the kafdrop service, and edit the yaml to modify the port and target port to 9000
+Go to Routes - > create route
+Give the name as kafdrop
+select service -> kafdrop
+select port : 9000 -> 9000
+
+Now navigate to the url of the route
