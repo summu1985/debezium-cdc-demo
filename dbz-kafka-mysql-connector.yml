@@ -19,4 +19,9 @@ spec:
     database.history.kafka.bootstrap.servers: "my-cluster-kafka-bootstrap:9092"
     database.history.kafka.topic: "schema-changes.inventory"
     include.schema.changes: "true"
+    transforms: unwrap
+    transforms.unwrap.delete.handling.mode: rewrite
+    transforms.unwrap.drop.tombstones: false
+    transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
+    transforms.unwrap.add.fields: op,table,db,source.ts_ms,source.db
     "value.converter": "io.debezium.converters.CloudEventsConverter"
