@@ -3,7 +3,7 @@ kind: KafkaConnector
 metadata:
   name: my-file-sink-connector
   labels:
-    strimzi.io/cluster: my-connect-cluster
+    strimzi.io/cluster: my-connect-sink-cluster
   namespace: debezium-demo
 spec:
   class: FileStreamSinkConnector
