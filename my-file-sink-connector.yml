@@ -4,14 +4,13 @@ metadata:
   name: my-file-sink-connector
   labels:
     strimzi.io/cluster: my-connect-sink-cluster
-  namespace: debezium-demo
+  namespace: debezium
 spec:
   class: FileStreamSinkConnector
   tasksMax: 1
   config:
     file: /tmp/amq-demo-sink.txt
-    topic :inventory.inventory.customers
+    topics: inventory.inventory.customers
     value.converter.schemas.enable: false
-    value.converter : org.apache.kafka.connect.storage.StringConverter
-    key.converter : org.apache.kafka.connect.storage.StringConverter
-    key.converter.schemas.enable : false
+    value.converter: org.apache.kafka.connect.storage.StringConverter
+    key.converter: org.apache.kafka.connect.storage.StringConverter
