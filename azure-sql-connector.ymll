@@ -2,17 +2,26 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
   labels:
-    strimzi.io/cluster: debezium-kafka-connect-cluster
-  name: inventory-connector-sqlserver
+    strimzi.io/cluster: my-connect-cluster
+  name: sqlserver-source-connector
 spec:
   class: io.debezium.connector.sqlserver.SqlServerConnector
   tasksMax: 1
   config:
-    database.history.kafka.bootstrap.servers: 'debezium-kafka-cluster-kafka-bootstrap.debezium.svc.cluster.local:9092'
-    database.history.kafka.topic: schema-changes.inventory
-    database.hostname: sqlserver.debezium-sqlserver.svc.cluster.local
-    database.port: 3306
-    database.user: debezium
-    database.password: <your db password>
-    database.dbname: mydatabase
+    database.history.kafka.bootstrap.servers: 'my-cluster-kafka-bootstrap:9092'
+    database.history.kafka.topic: schema-changes.azuresrcdb
+    database.hostname: <your azure SQL DB FQDN>
+    database.port: 1433
+    database.user: <your DB user>
+    database.password: <your DB password>
+    database.dbname: <your azure DB>
     database.server.name: inventory_connector_sqlserver
+    transforms: unwrap
+    transforms.unwrap.delete.handling.mode: rewrite
+    transforms.unwrap.drop.tombstones: false
+    transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
+    transforms.unwrap.add.fields: op,table,db,source.ts_ms,source.db
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: false
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
