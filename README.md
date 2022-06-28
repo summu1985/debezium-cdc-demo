@@ -132,7 +132,7 @@ Once the MySQL DB is up, login to its terminal using root user (password not nee
 when logging in through pod terminal).
 
 ## MYSQL
-
+```
 mysql -uroot 
 
 create database inventory;
@@ -152,12 +152,12 @@ CREATE TABLE IF NOT EXISTS customers (
     name VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )  ENGINE=INNODB;
-
+```
 
 5. Install Kafka Connector for specific DB
 
 ## MySQL connector
-
+```
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
@@ -186,9 +186,9 @@ spec:
     key.converter.schemas.enable: false
     value.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter.schemas.enable: false
-
+```
 ## SQL server
-
+```
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
@@ -216,13 +216,15 @@ spec:
     key.converter.schemas.enable: false
     value.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter.schemas.enable: false
-
+```
 6. Insert data in source table
 
 ## MYSQL
-use inventory;
 
+```
+use inventory;
 INSERT INTO customers (name) VALUES ('Sumit Mukherjee'); 
+```
 
 7. Install Kafdrop to see messages in kafka topics from browser (optional)
 
@@ -260,7 +262,7 @@ If using SQL server, the data would appear in topic named sqlserver.dbo.customer
 Deploy a MySQL DB to act as sink DB and name the sql service as mysql-sink
 
 ## MYSQL
-
+```
 create database mysqlsinkdb;
 
 create USER 'debezium'@'%' IDENTIFIED WITH mysql_native_password BY 'debezium'; 
@@ -284,15 +286,17 @@ CREATE TABLE IF NOT EXISTS customers (
     src_db_name VARCHAR(255),
     src_table_name VARCHAR(255)
 )  ENGINE=INNODB;
-
+```
 
 ## SQL Server
+```
 create table customerssink ( customer_id int, name varchar(50), created_at varchar(100), insert_user varchar(100), insert_timestamp varchar(255), update_user varchar(50), update_timestamp varchar(255), src_db_name varchar(50), src_table_name varchar(50) CONSTRAINT "PK_Customers" PRIMARY KEY CLUSTERED ("customer_id") );
+```
 
 8. Install Kafka Topic to Sink DB connector kamelet binding - handles source DB inserts only
 
 ## My SQL
-## mysql-sink-binding.yaml
+```mysql-sink-binding.yaml
 
 apiVersion: camel.apache.org/v1alpha1
 kind: KameletBinding
@@ -315,11 +319,11 @@ spec:
       query: "INSERT INTO customers (customer_id, name, created_at, insert_user, insert_timestamp, src_db_name, src_table_name) VALUES (:#customer_id,:#name,:#created_at, 'debezium', :#__source_ts_ms, :#__db, :#__table)"
       serverName: mysql-sink
       username: debezium
-
-## END of mysql-sink-binding.yaml
+```
 
 ## SQL server
-## sqlserver-sink-binding.yml
+
+```sqlserver-sink-binding.yml
 
 apiVersion: camel.apache.org/v1alpha1
 kind: KameletBinding
@@ -343,30 +347,31 @@ spec:
       serverName: <your DB hostname>
       username: <your DB username>
 
-## END OF sqlserver-sink-binding.yml
+```
 
 9. Create the kamelet binding 
-oc apply -f mysql-sink-binding.yaml
+`oc apply -f mysql-sink-binding.yaml`
 or
-oc apply -f sqlserver-sink-binding.yml
+`oc apply -f sqlserver-sink-binding.yml`
 
 10. Check the status of kameletbindings
 
-oc get kameletbindings
+`oc get kameletbindings`
 
 The output should be similar
 
+```
 bash-3.2$ oc get kameletbindings
 NAME                                    PHASE   REPLICAS
 azuresql-to-azuresql-sink-binding       Ready   1
 azuresql-to-azuresql-sink-binding-new   Ready   1
 sqlserver-sink-binding                  Ready   1
-
+```
 The PHASE can be Building and it may take some time to actually be ready.
 
 11. Monitor the kamelet binding log
 
-kamel logs sqlserver-sink-binding
+`kamel logs sqlserver-sink-binding`
 
 12. Insert some new data in source table and the data should be populated in the sink DB.
 
