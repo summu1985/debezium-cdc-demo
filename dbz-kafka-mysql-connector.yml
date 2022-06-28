@@ -1,23 +1,22 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
-  name: my-source-connector
+  name: mysql-source-connector
   labels:
-    strimzi.io/cluster: my-connect-cluster
-  namespace: debezium-demo
+    strimzi.io/cluster: my-source-connect-cluster
 spec:
   class: io.debezium.connector.mysql.MySqlConnector
   tasksMax: 1
   config:
+    database.server.name: mysql-inventory
     database.hostname: mysql
-    database.port: "3306"
-    database.user: "${file:/opt/kafka/external-configuration/connector-config/debezium-mysql-credentials.properties:mysql_username}"
-    database.password: "${file:/opt/kafka/external-configuration/connector-config/debezium-mysql-credentials.properties:mysql_password}"
-    database.server.id: "184054"
-    database.server.name: "inventory"
-    database.whitelist: "inventory"
-    database.history.kafka.bootstrap.servers: "my-cluster-kafka-bootstrap:9092"
-    database.history.kafka.topic: "schema-changes.inventory"
+    database.password: <your password>
+    database.port: '3306'
+    database.whitelist: inventory
+    database.history.kafka.topic: schema-changes.inventory
+    database.history.kafka.bootstrap.servers: 'my-cluster-kafka-bootstrap:9092'
+    database.dbname: inventory
+    database.user: debezium
     transforms: unwrap
     transforms.unwrap.delete.handling.mode: rewrite
     transforms.unwrap.drop.tombstones: false
