@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS customers (
 5. Install Kafka Connector for specific DB
 
 ## MySQL connector
-```
+```mysql-source-connector.yaml
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
@@ -188,7 +188,7 @@ spec:
     value.converter.schemas.enable: false
 ```
 ## SQL server
-```
+```sqlserver-source-connector.yaml
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
