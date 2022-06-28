@@ -1,0 +1,21 @@
+apiVersion: camel.apache.org/v1alpha1
+kind: KameletBinding
+metadata:
+  name: azuresql-to-azuresql-sink-binding
+spec:
+  source:
+    ref:
+      kind: KafkaTopic
+      apiVersion: kafka.strimzi.io/v1beta1
+      name: sqlserver.dbo.customers
+  sink:
+    ref:
+      kind: Kamelet
+      apiVersion: camel.apache.org/v1alpha1
+      name: sqlserver-sink
+    properties:
+      databaseName: <your DB name>
+      password: <your DB password>
+      query: "INSERT INTO customerssink (customer_id, name, created_at, insert_user, insert_timestamp, src_db_name, src_table_name) VALUES (:#customer_id,:#name,:#created_at, 'debezium', :#__source_ts_ms, :#__db, :#__table)"
+      serverName: <your DB hostname>
+      username: <your DB username>
