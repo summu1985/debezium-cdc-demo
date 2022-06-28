@@ -1,0 +1,27 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  labels:
+    strimzi.io/cluster: my-connect-cluster
+  name: sqlserver-source-connector
+spec:
+  class: io.debezium.connector.sqlserver.SqlServerConnector
+  tasksMax: 1
+  config:
+    database.history.kafka.bootstrap.servers: 'my-cluster-kafka-bootstrap:9092'
+    database.history.kafka.topic: schema-changes.azuresrcdb
+    database.hostname: <you DB hostname>
+    database.port: 1433
+    database.user: <your DB username>
+    database.password: <your DB password>
+    database.dbname: azure-src-db
+    database.server.name: sqlserver
+    transforms: unwrap
+    transforms.unwrap.delete.handling.mode: rewrite
+    transforms.unwrap.drop.tombstones: false
+    transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
+    transforms.unwrap.add.fields: op,table,db,source.ts_ms,source.db
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: false
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
