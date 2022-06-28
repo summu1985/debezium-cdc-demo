@@ -1,0 +1,25 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: debezium-kafka-source-connect-cluster
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  version: 3.00
+  build:
+    output:
+      type: imagestream
+      image: debezium-streams-connect:latest
+    plugins:
+      - name: debezium-connectors
+        artifacts:
+          - type: zip
+            url: https://maven.repository.redhat.com/ga/io/debezium/debezium-connector-sqlserver/1.7.2.Final-redhat-00003/debezium-connector-sqlserver-1.7.2.Final-redhat-00003-plugin.zip
+          - type: zip
+            url: https://maven.repository.redhat.com/ga/io/apicurio/apicurio-registry-distro-connect-converter/2.0.3.Final-redhat-00002/apicurio-registry-distro-connect-converter-2.0.3.Final-redhat-00002.zip
+          - type: zip
+            url: https://maven.repository.redhat.com/ga/io/debezium/debezium-scripting/1.7.2.Final-redhat-00003/debezium-scripting-1.7.2.Final-redhat-00003.zip
+          - type: zip
+            url: https://maven.repository.redhat.com/ga/io/debezium/debezium-connector-mysql/1.7.2.Final-redhat-00003/debezium-connector-mysql-1.7.2.Final-redhat-00003-plugin.zip
+
+  bootstrapServers: my-cluster-kafka-bootstrap:9093
