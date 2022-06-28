@@ -16,6 +16,6 @@ spec:
     properties:
       databaseName: <your db name>
       password: <your db password>
-      query: "INSERT INTO customerssink (customer_id, name, created_at, insert_user, insert_timestamp, src_db_name, src_table_name) VALUES (:#customer_id,:#name,:#created_at, 'debezium', :#__source_ts_ms, :#__db, :#__table)"
+      query: "INSERT INTO customers (customer_id, name, created_at, insert_user, insert_timestamp, src_db_name, src_table_name) VALUES (:#customer_id,:#name,:#created_at, 'debezium', :#__source_ts_ms, :#__db, :#__table)"
       serverName: <your DB FQDN>
       username: debeziumdemo
