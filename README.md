@@ -257,7 +257,7 @@ If using SQL server, the data would appear in topic named sqlserver.dbo.customer
 
 9. Install kamel cli on your workstation to view kamelet logs
 
-5. Create sink DB and table
+10. Create sink DB and table
 
 Deploy a MySQL DB to act as sink DB and name the sql service as mysql-sink
 
@@ -293,7 +293,7 @@ CREATE TABLE IF NOT EXISTS customers (
 create table customerssink ( customer_id int, name varchar(50), created_at varchar(100), insert_user varchar(100), insert_timestamp varchar(255), update_user varchar(50), update_timestamp varchar(255), src_db_name varchar(50), src_table_name varchar(50) CONSTRAINT "PK_Customers" PRIMARY KEY CLUSTERED ("customer_id") );
 ```
 
-8. Install Kafka Topic to Sink DB connector kamelet binding - handles source DB inserts only
+11. Install Kafka Topic to Sink DB connector kamelet binding - handles source DB inserts only
 
 ## My SQL
 ```mysql-sink-binding.yaml
@@ -349,12 +349,12 @@ spec:
 
 ```
 
-9. Create the kamelet binding 
+12. Create the kamelet binding 
 `oc apply -f mysql-sink-binding.yaml`
 or
 `oc apply -f sqlserver-sink-binding.yml`
 
-10. Check the status of kameletbindings
+13. Check the status of kameletbindings
 
 `oc get kameletbindings`
 
@@ -369,9 +369,9 @@ sqlserver-sink-binding                  Ready   1
 ```
 The PHASE can be Building and it may take some time to actually be ready.
 
-11. Monitor the kamelet binding log
+14. Monitor the kamelet binding log
 
 `kamel logs sqlserver-sink-binding`
 
-12. Insert some new data in source table and the data should be populated in the sink DB.
+15. Insert some new data in source table and the data should be populated in the sink DB.
 
