@@ -163,13 +163,13 @@ kind: KafkaConnector
 metadata:
   name: mysql-source-connector
   labels:
-    strimzi.io/cluster: my-source-connect-cluster
+    strimzi.io/cluster: my-connect-cluster
 spec:
   class: io.debezium.connector.mysql.MySqlConnector
   tasksMax: 1
   config:
     database.server.name: mysql-inventory
-    database.hostname: mysql
+    database.hostname: mysql-source
     database.password: <your DB password>
     database.port: '3306'
     database.whitelist: inventory
@@ -307,7 +307,7 @@ spec:
     ref:
       kind: KafkaTopic
       apiVersion: kafka.strimzi.io/v1beta1
-      name: inventory.inventory.users
+      name: mysql-inventory.inventory.customers
   sink:
     ref:
       kind: Kamelet
@@ -316,7 +316,7 @@ spec:
     properties:
       databaseName: mysqlsinkdb
       password: <your DB password>
-      query: "INSERT INTO customers (customer_id, name, created_at, insert_user, insert_timestamp, src_db_name, src_table_name) VALUES (:#customer_id,:#name,:#created_at, 'debezium', :#__source_ts_ms, :#__db, :#__table)"
+      query: "INSERT INTO customers (customer_id, name, created_at, insert_user, insert_timestamp, update_user, update_timestamp, src_db_name, src_table_name) VALUES (:#customer_id,:#name,:#created_at, 'debezium', :#__source_ts_ms, 'debezium', :#__source_ts_ms, :#__db, :#__table)"
       serverName: mysql-sink
       username: debezium
 ```
